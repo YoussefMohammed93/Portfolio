@@ -4,9 +4,10 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Work = () => {
   const [projects, setProjects] = useState([]);
@@ -47,7 +48,11 @@ export const Work = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-[#1a191d]">
-        <Loader2 className="size-10 text-white animate-spin" />
+        <div className="grid grid-cols-1 custom-md:grid-cols-3 gap-6 mt-5 w-full max-w-7xl">
+          <Skeleton className="w-full h-80 bg-muted-foreground" />
+          <Skeleton className="w-full h-80 bg-muted-foreground" />
+          <Skeleton className="w-full h-80 bg-muted-foreground" />
+        </div>
       </div>
     );
   }
