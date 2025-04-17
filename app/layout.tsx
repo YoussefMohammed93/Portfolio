@@ -1,7 +1,9 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
+
 import { Ovo } from "next/font/google";
+import { ConvexClientProvider } from "./convex-client-provider";
 
 const ovo = Ovo({
   weight: ["400"],
@@ -21,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${ovo.variable} font-ovo antialiased`}>{children}</body>
+      <body className={`${ovo.variable} font-ovo antialiased`}>
+        <ConvexClientProvider>{children}</ConvexClientProvider>
+      </body>
     </html>
   );
 }
