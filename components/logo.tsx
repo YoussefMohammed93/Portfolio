@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Outfit } from "next/font/google";
 
 const OutfitFont = Outfit({
-  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const Logo = () => {

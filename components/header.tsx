@@ -2,6 +2,7 @@
 
 import { Logo } from "./logo";
 import { Navbar } from "./navbar";
+import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
@@ -46,10 +47,13 @@ export const Header = () => {
             className={`hidden md:flex items-center gap-3 transition-all duration-300 ${isScrolled ? "opacity-0 translate-x-10 invisible" : "opacity-100"}`}
           >
             <ModeToggle />
-            <button className="cursor-pointer flex items-center gap-2 px-4 lg:px-8 py-2.5 rounded-full border dark:bg-secondary/50 hover:bg-secondary transition-all duration-200">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2 !px-4 lg:!px-8 !h-11 rounded-full"
+            >
               Connect
               <ArrowUpRight className="stroke-1" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
