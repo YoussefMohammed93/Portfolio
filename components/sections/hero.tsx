@@ -90,7 +90,7 @@ export const Hero = memo(() => {
   }, []);
 
   if (!isVisible) {
-    return <section id="hero" className="w-full pt-28 sm:pt-36" />;
+    return <section id="hero" className="w-full min-h-screen pt-28 sm:pt-36" />;
   }
 
   return (
@@ -98,7 +98,8 @@ export const Hero = memo(() => {
       id="hero"
       itemScope
       aria-label="Introduction"
-      className="w-full pt-28 sm:pt-36"
+      itemType="https://schema.org/Person"
+      className="w-full min-h-screen pt-28 sm:pt-36"
     >
       <div className="max-w-[1360px] mx-auto flex flex-col items-center justify-center px-5 will-change-transform">
         <ProfileImage />

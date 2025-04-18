@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { useState } from "react";
+import { Button } from "./ui/button";
 import { NavItem } from "@/types/types";
 import { Menu, ArrowUpRight } from "lucide-react";
 
@@ -74,10 +75,10 @@ export const Navbar = ({ showMobile = false }: NavbarProps) => {
               ))}
             </div>
             <div className="mt-8 px-4">
-              <button className="w-full cursor-pointer flex items-center justify-center gap-2 py-2.5 rounded-full border dark:bg-secondary/50 hover:bg-secondary dark:hover:bg-secondary transition-all duration-200">
+              <Button variant="outline" className="w-full cursor-pointer flex items-center justify-center gap-2 py-2.5">
                 Connect
                 <ArrowUpRight className="stroke-1" />
-              </button>
+              </Button>
             </div>
           </SheetContent>
         </Sheet>
@@ -86,7 +87,7 @@ export const Navbar = ({ showMobile = false }: NavbarProps) => {
   }
 
   return (
-    <nav className="bg-background dark:bg-secondary/50 backdrop-blur-sm border px-5 lg:px-10 py-2.5 rounded-full transition-all duration-300">
+    <nav className="bg-background dark:bg-secondary/25 backdrop-blur-md border px-5 lg:px-10 py-2.5 rounded-full transition-all duration-300">
       <div className="flex items-center gap-4 lg:gap-8">
         {navItems.map((item) => (
           <Link

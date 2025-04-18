@@ -24,7 +24,7 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className="w-full fixed top-0 z-50 bg-background/80 backdrop-blur-sm transition-all duration-300">
+    <header className="w-full fixed top-0 z-50 bg-background/80 backdrop-blur-md transition-all duration-300">
       <div className="max-w-[1360px] mx-auto px-5 py-3 flex items-center justify-between">
         <div
           className={`transition-all duration-300 ${
