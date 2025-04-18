@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 import { Ovo } from "next/font/google";
+
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexClientProvider } from "./convex-client-provider";
 
@@ -23,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${ovo.variable} font-ovo antialiased`}>
         <ThemeProvider
           enableSystem
