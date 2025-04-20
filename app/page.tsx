@@ -1,5 +1,6 @@
 import { Header } from "@/components/header";
 import { Hero } from "@/components/sections/hero";
+import { MyWork } from "@/components/sections/my-work";
 import { AboutMe } from "@/components/sections/about-me";
 
 export default function MainPage() {
@@ -9,6 +10,7 @@ export default function MainPage() {
       <main>
         <Hero />
         <AboutMe />
+        <MyWork />
       </main>
     </>
   );

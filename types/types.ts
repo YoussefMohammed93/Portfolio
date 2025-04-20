@@ -21,3 +21,18 @@ export type Education = {
   description: string;
   meta: EducationMeta;
 };
+
+export type ProjectCategory = "web" | "mobile" | "fullstack" | "all";
+
+export type Project = {
+  id: string;
+  title: string;
+  image: string;
+  demoUrl?: string;
+  githubUrl?: string;
+  featured?: boolean;
+  description: string;
+  datePublished: string;
+  technologies: string[];
+  category: ProjectCategory;
+};

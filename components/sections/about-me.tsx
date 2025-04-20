@@ -388,7 +388,7 @@ export const AboutMe = memo(() => {
     return (
       <section
         id="about"
-        className="w-full min-h-screen py-16"
+        className="w-full min-h-screen py-10"
         aria-labelledby="about-heading"
         data-section="about"
       />
@@ -398,7 +398,7 @@ export const AboutMe = memo(() => {
   return (
     <section
       id="about"
-      className="w-full min-h-screen py-16"
+      className="w-full min-h-screen py-10"
       aria-labelledby="about-heading"
       data-section="about"
     >

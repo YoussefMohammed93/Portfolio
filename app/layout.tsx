@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     "Node.js Developer",
     "JavaScript Developer",
     "TypeScript Developer",
+    "Portfolio Projects",
+    "Web Development Portfolio",
+    "React Projects",
+    "Full Stack Projects",
+    "Mobile App Development",
     "Egypt",
   ],
   authors: [{ name: "Youssef Mohammed" }],
@@ -38,6 +43,19 @@ export const metadata: Metadata = {
     description:
       "Full Stack Developer with 3 years of experience building modern web applications using React, Next.js, and Node.js with best practices for performance and accessibility.",
     siteName: "Youssef Mohammed Portfolio",
+  },
+  alternates: {
+    canonical: "https://youssefmohammed.com",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
