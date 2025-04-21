@@ -4,229 +4,206 @@ import Link from "next/link";
 import Image from "next/image";
 
 import {
-  Code2,
-  Search,
-  Calendar,
-  ArrowRight,
   ExternalLink,
+  Calendar,
+  Smartphone,
+  FileX,
+  Github,
 } from "lucide-react";
-
 import {
   Card,
-  CardTitle,
-  CardHeader,
-  CardFooter,
   CardContent,
   CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-
-import { Outfit } from "next/font/google";
+import { useState, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Project, ProjectCategory } from "@/types/types";
-import { useState, memo, useMemo, useCallback } from "react";
-
-const OutfitFont = Outfit({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const projects: Project[] = [
   {
     id: "1",
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce platform with product management, cart functionality, user authentication, and payment processing.",
+    title: "E-Commerce Dashboard",
     image: "/linkup.png",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "MongoDB"],
+    description:
+      "A comprehensive dashboard for managing e-commerce operations with analytics, inventory management, and order processing.",
+    datePublished: "2023-05-15",
+    technologies: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "MongoDB",
+    ],
     category: "fullstack",
-    demoUrl: "https://example.com/ecommerce",
-    githubUrl: "https://github.com/youssefmohammed/ecommerce",
+    githubUrl: "https://github.com/yourusername/ecommerce-dashboard",
+    demoUrl: "https://ecommerce-dashboard-demo.com",
     featured: true,
-    datePublished: "2023-09-15",
   },
   {
     id: "2",
-    title: "Task Management App",
-    description:
-      "A collaborative task management application with real-time updates, task assignment, and progress tracking.",
+    title: "Social Media App",
     image: "/linkup.png",
-    technologies: ["React", "Node.js", "Express", "MongoDB"],
-    category: "fullstack",
-    demoUrl: "https://example.com/taskmanager",
-    githubUrl: "https://github.com/youssefmohammed/taskmanager",
-    datePublished: "2023-07-20",
+    description:
+      "A feature-rich social media application with real-time messaging, post sharing, and user profiles.",
+    datePublished: "2023-03-10",
+    technologies: ["React", "Firebase", "Tailwind CSS", "JavaScript"],
+    category: "web",
+    githubUrl: "https://github.com/yourusername/social-media-app",
+    demoUrl: "https://social-media-app-demo.com",
   },
   {
     id: "3",
-    title: "Social Media Dashboard",
-    description:
-      "A responsive dashboard for social media analytics with interactive charts and data visualization.",
+    title: "Task Management System",
     image: "/linkup.png",
-    technologies: ["React", "Chart.js", "Tailwind CSS"],
-    category: "web",
-    demoUrl: "https://example.com/dashboard",
-    githubUrl: "https://github.com/youssefmohammed/dashboard",
-    featured: true,
-    datePublished: "2023-11-05",
+    description:
+      "A comprehensive task management system with drag-and-drop functionality, task assignments, and progress tracking.",
+    datePublished: "2023-01-20",
+    technologies: ["React", "Redux", "Node.js", "Express", "MongoDB"],
+    category: "fullstack",
+    githubUrl: "https://github.com/yourusername/task-management",
   },
   {
     id: "4",
-    title: "Fitness Tracking Mobile App",
-    description:
-      "A mobile application for tracking workouts, nutrition, and fitness progress with personalized recommendations.",
+    title: "Weather App",
     image: "/linkup.png",
-    technologies: ["React Native", "Firebase", "Redux"],
+    description:
+      "A responsive weather application that provides real-time weather information for any location with a 5-day forecast.",
+    datePublished: "2022-11-05",
+    technologies: ["React", "JavaScript", "CSS", "Weather API"],
     category: "web",
-    demoUrl: "https://example.com/fitness",
-    datePublished: "2023-08-12",
+    githubUrl: "https://github.com/yourusername/weather-app",
+    demoUrl: "https://weather-app-demo.com",
   },
-  {
-    id: "5",
-    title: "Real Estate Listing Platform",
-    description:
-      "A platform for real estate listings with advanced search, filtering, and property management features.",
-    image: "/linkup.png",
-    technologies: ["Next.js", "MongoDB", "Tailwind CSS", "Mapbox"],
-    category: "fullstack",
-    demoUrl: "https://example.com/realestate",
-    githubUrl: "https://github.com/youssefmohammed/realestate",
-    datePublished: "2023-10-18",
-  },
+  // Mobile app projects removed to show empty state
   {
     id: "6",
-    title: "Portfolio Website Design",
-    description:
-      "A modern and responsive portfolio website design for creative professionals with smooth animations.",
+    title: "Restaurant Ordering System",
     image: "/linkup.png",
-    technologies: ["Figma", "Adobe XD", "Illustrator"],
-    category: "web",
-    demoUrl: "https://example.com/portfolio",
-    datePublished: "2023-06-30",
+    description:
+      "A full-stack application for restaurant ordering with menu management, order processing, and payment integration.",
+    datePublished: "2022-07-20",
+    technologies: ["React", "Node.js", "Express", "MongoDB", "Stripe"],
+    category: "fullstack",
+    githubUrl: "https://github.com/yourusername/restaurant-ordering",
+    demoUrl: "https://restaurant-ordering-demo.com",
   },
-];
-
-const categories: { label: string; value: ProjectCategory }[] = [
-  { label: "All Projects", value: "all" },
-  { label: "Front End", value: "web" },
-  { label: "Full Stack", value: "fullstack" },
-  { label: "Mobile Apps", value: "mobile" },
+  // Another mobile app project removed to show empty state
+  {
+    id: "8",
+    title: "Portfolio Website",
+    image: "/linkup.png",
+    description:
+      "A responsive portfolio website showcasing projects, skills, and professional experience with a modern design.",
+    datePublished: "2022-03-15",
+    technologies: ["React", "Next.js", "Tailwind CSS", "TypeScript"],
+    category: "web",
+    githubUrl: "https://github.com/yourusername/portfolio",
+    demoUrl: "https://portfolio-demo.com",
+    featured: true,
+  },
 ];
 
 const ProjectCard = memo(({ project }: { project: Project }) => {
-  const altText = `${project.title} - ${project.description.substring(0, 50)}... | Project by Youssef Mohammed`;
+  const formattedDate = new Date(project.datePublished).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
 
   return (
-    <Card className="overflow-hidden pt-0 border-opacity-50 h-full flex flex-col shadow-none">
-      <div className="absolute top-2 right-2 z-10">
-        {project.featured && (
-          <div className="bg-primary/90 text-primary-foreground text-xs font-medium py-1 px-2 rounded-full">
-            Featured
-          </div>
-        )}
-      </div>
-      <div className="relative h-52 w-full overflow-hidden">
+    <Card
+      className="overflow-hidden h-full flex flex-col pt-0"
+      itemScope
+      itemType="https://schema.org/CreativeWork"
+    >
+      <div className="relative h-48 w-full overflow-hidden">
         <Image
           src={project.image}
-          alt={altText}
-          className="object-cover w-full h-full absolute inset-0"
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          priority={project.featured}
-          loading={project.featured ? "eager" : "lazy"}
+          alt={`${project.title} - Project by Youssef Mohammed`}
           fill
-          fetchPriority={project.featured ? "high" : "auto"}
-          decoding="async"
+          className="object-cover transition-transform hover:scale-105 duration-300"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={90}
+          priority={project.featured}
+          itemProp="image"
         />
-        {project.featured && (
-          <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-medium py-1 px-2 rounded-full">
-            Featured
-          </div>
-        )}
       </div>
-      <CardHeader className="pb-2">
-        <CardTitle className="line-clamp-1 text-xl" title={project.title}>
+      <CardHeader>
+        <CardTitle className="text-xl truncate" itemProp="name">
           {project.title}
         </CardTitle>
-        <div className="flex items-center text-xs text-muted-foreground mt-1">
-          <Calendar className="size-3 mr-1" />
+        <div className="flex items-center text-sm text-muted-foreground gap-1">
+          <Calendar className="h-4 w-4" />
           <time dateTime={project.datePublished} itemProp="datePublished">
-            {new Date(project.datePublished).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-            })}
+            {formattedDate}
           </time>
         </div>
-        <CardDescription className="flex flex-wrap gap-1.5 mt-2">
-          {project.technologies.map((tech) => (
-            <span
-              key={tech}
-              className="bg-secondary text-secondary-foreground inline-block rounded-full px-2 py-0.5 text-xs font-medium"
-              itemProp="keywords"
-            >
-              {tech}
-            </span>
-          ))}
+        <CardDescription className="text-sm" itemProp="category">
+          {project.category === "web"
+            ? "Front End"
+            : project.category === "fullstack"
+              ? "Full Stack"
+              : project.category === "mobile"
+                ? "Mobile App"
+                : "Project"}
         </CardDescription>
       </CardHeader>
-      <CardContent className="pb-4 flex-grow">
+      <CardContent className="flex-grow">
         <p
-          className="text-muted-foreground line-clamp-2 text-sm"
+          className="text-muted-foreground text-sm line-clamp-2"
           itemProp="description"
         >
           {project.description}
         </p>
-      </CardContent>
-      <CardFooter className="flex justify-between gap-2 pt-2 border-t">
-        <div className="flex gap-2">
-          {project.demoUrl && (
-            <Button variant="outline" size="sm" asChild className="">
-              <Link
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`View live demo of ${project.title}`}
-                itemProp="url"
+        <div className="mt-4">
+          <div className="flex flex-wrap gap-2">
+            {project.technologies.map((tech) => (
+              <span
+                key={tech}
+                className="bg-secondary text-secondary-foreground text-xs px-2 py-1 rounded-full"
+                itemProp="keywords"
               >
-                <ExternalLink className="size-4" />
-                <span className="sr-only md:not-sr-only md:inline-block">
-                  Demo
-                </span>
-              </Link>
-            </Button>
-          )}
-          {project.githubUrl && (
-            <Button variant="outline" size="sm" asChild className="">
-              <Link
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`View source code of ${project.title} on GitHub`}
-                itemProp="codeRepository"
-              >
-                <Code2 className="size-4" />
-                <span className="sr-only md:not-sr-only md:inline-block">
-                  Code
-                </span>
-              </Link>
-            </Button>
-          )}
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
-        <Button
-          variant="default"
-          size="sm"
-          asChild
-          className={`${OutfitFont.className}`}
-        >
-          <Link
-            href={project.demoUrl || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Learn more about ${project.title} project`}
-            itemProp="mainEntityOfPage"
-          >
-            Details
-            <ArrowRight className="size-4" />
-          </Link>
-        </Button>
+      </CardContent>
+      <CardFooter className="flex gap-2 pt-0">
+        {project.githubUrl && (
+          <Button asChild variant="outline" size="sm" className="flex-1">
+            <Link
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              itemProp="codeRepository"
+            >
+              <Github />
+              GitHub
+            </Link>
+          </Button>
+        )}
+        {project.demoUrl && (
+          <Button asChild size="sm" className="flex-1">
+            <Link
+              href={project.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              itemProp="url"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Live Demo
+            </Link>
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
@@ -234,192 +211,82 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
 
 ProjectCard.displayName = "ProjectCard";
 
-const CategoryButton = memo(
-  ({
-    category,
-    isSelected,
-    onClick,
-  }: {
-    category: { label: string; value: ProjectCategory };
-    isSelected: boolean;
-    onClick: (value: ProjectCategory) => void;
-  }) => {
-    return (
-      <Button
-        key={category.value}
-        variant={isSelected ? "default" : "outline"}
-        size="sm"
-        onClick={() => onClick(category.value)}
-        className={`${OutfitFont.className} font-light sm:font-medium sm:px-2.5 px-1.5 ${isSelected ? "shadow-sm" : ""}`}
-        aria-pressed={isSelected}
-        aria-label={`Filter by ${category.label}`}
-      >
-        {category.label}
-      </Button>
-    );
-  }
-);
+const EmptyMobileAppsState = memo(() => {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 px-4">
+      <div className="bg-secondary rounded-full p-8 mb-8">
+        <Smartphone className="h-20 w-20 text-primary" />
+      </div>
+      <h3 className="text-2xl font-medium mb-3 line-clamp-1">
+        No Mobile Apps Yet
+      </h3>
+      <p className="text-muted-foreground text-center max-w-md mb-8">
+        I&apos;m currently focusing on web development projects, but mobile app
+        projects will be coming soon!
+      </p>
+    </div>
+  );
+});
 
-CategoryButton.displayName = "CategoryButton";
+EmptyMobileAppsState.displayName = "EmptyMobileAppsState";
 
 export const MyWork = () => {
-  const [selectedCategory, setSelectedCategory] =
-    useState<ProjectCategory>("all");
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>("all");
 
-  const handleCategoryChange = useCallback((category: ProjectCategory) => {
-    setSelectedCategory(category);
-  }, []);
-
-  const filteredProjects = useMemo(() => {
-    return selectedCategory === "all"
+  const filteredProjects =
+    activeCategory === "all"
       ? projects
-      : projects.filter((project) => project.category === selectedCategory);
-  }, [selectedCategory]);
+      : projects.filter((project) => project.category === activeCategory);
+
+  const showMobileEmptyState =
+    activeCategory === "mobile" && filteredProjects.length === 0;
 
   return (
-    <section
-      id="work"
-      className="w-full min-h-screen bg-secondary/5 py-10"
-      aria-label="My Work"
-      itemScope
-      itemType="https://schema.org/CollectionPage"
-      role="region"
-      aria-describedby="work-section-description"
-    >
-      <span id="work-section-description" className="sr-only">
-        Browse Youssef Mohammed&apos;s portfolio of web development, mobile app,
-        and full-stack projects showcasing skills in React, Next.js, and more.
-      </span>
+    <section id="work" className="py-20 w-full" aria-label="My Work">
       <div className="max-w-[1360px] mx-auto px-5">
-        <div>
-          <div
-            itemProp="mainEntity"
-            itemScope
-            itemType="https://schema.org/ItemList"
-          >
-            <meta
-              itemProp="numberOfItems"
-              content={projects.length.toString()}
-            />
-            <h2
-              className="text-3xl sm:text-4xl md:text-5xl text-center font-bold mb-4"
-              itemProp="name"
-            >
-              My <span className="text-primary">Work</span>
-            </h2>
-            <div className="flex justify-center text-center">
-              <p
-                className="text-muted-foreground max-w-5xl mb-8 text-base md:text-lg"
-                itemProp="description"
-              >
-                Explore my portfolio of projects showcasing my skills in web
-                development, mobile applications, and full-stack solutions. Each
-                project demonstrates my commitment to creating intuitive,
-                high-performance, and accessible digital experiences.
-              </p>
-            </div>
-            <nav aria-label="Project categories" className="mb-8">
-              <h3 className="sr-only">Filter projects by category</h3>
-              <div className="flex justify-center">
-                <div className="flex gap-1 sm:gap-3 mb-10 bg-secondary/20 rounded-xl max-w-fit">
-                  {categories.map((category) => (
-                    <CategoryButton
-                      key={category.value}
-                      category={category}
-                      isSelected={selectedCategory === category.value}
-                      onClick={handleCategoryChange}
-                    />
-                  ))}
-                </div>
-              </div>
-            </nav>
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-              role="list"
-              style={{ contentVisibility: "auto" }}
-            >
-              {filteredProjects.map((project, index) => (
-                <div
-                  key={project.id}
-                  className=""
-                  itemScope
-                  itemType="https://schema.org/SoftwareApplication"
-                  itemProp="itemListElement"
-                  role="listitem"
-                  data-project-id={project.id}
-                >
-                  <meta itemProp="name" content={project.title} />
-                  <meta itemProp="description" content={project.description} />
-                  <meta
-                    itemProp="applicationCategory"
-                    content={
-                      project.category === "web"
-                        ? "WebApplication"
-                        : project.category === "mobile"
-                          ? "MobileApplication"
-                          : "MultiPlatform"
-                    }
-                  />
-                  <meta itemProp="operatingSystem" content="Cross-platform" />
-                  <meta itemProp="author" content="Youssef Mohammed" />
-                  <meta
-                    itemProp="datePublished"
-                    content={project.datePublished}
-                  />
-                  <meta itemProp="position" content={(index + 1).toString()} />
-                  {project.demoUrl && (
-                    <meta itemProp="url" content={project.demoUrl} />
-                  )}
-                  <ProjectCard project={project} />
-                </div>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">My Work</h2>
+          <p className="text-muted-foreground max-w-3xl mx-auto">
+            Explore my portfolio of projects showcasing my skills in web and
+            mobile development. Each project demonstrates my expertise in
+            creating responsive, user-friendly, and performant applications.
+          </p>
+        </div>
+        <Tabs
+          defaultValue="all"
+          value={activeCategory}
+          onValueChange={(value) => setActiveCategory(value as ProjectCategory)}
+          className="w-full"
+        >
+          <div className="flex justify-center mb-8">
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="web">Front End</TabsTrigger>
+              <TabsTrigger value="fullstack">Full Stack</TabsTrigger>
+              <TabsTrigger value="mobile">Mobile Apps</TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value={activeCategory} className="mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProjects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
-            {filteredProjects.length === 0 && (
-              <div className="text-center py-12 px-4 rounded-lg mx-auto max-w-lg">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="bg-secondary p-4 rounded-full">
-                    <Search
-                      className="size-8 text-muted-foreground"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <h3 className="text-lg font-medium">No projects found</h3>
-                  <p className="text-muted-foreground text-sm max-w-lg">
-                    No projects found in this category yet. More exciting
-                    projects coming soon! Try selecting another category to
-                    explore existing work.
+            {showMobileEmptyState ? (
+              <EmptyMobileAppsState />
+            ) : (
+              filteredProjects.length === 0 && (
+                <div className="text-center max-w-lg mx-auto py-12">
+                  <FileX className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-muted-foreground">
+                    No projects found in this category yet. Check back later for
+                    new additions to my portfolio!
                   </p>
                 </div>
-              </div>
+              )
             )}
-          </div>
-          <div
-            className="hidden"
-            itemScope
-            itemType="https://schema.org/BreadcrumbList"
-          >
-            <div
-              itemProp="itemListElement"
-              itemScope
-              itemType="https://schema.org/ListItem"
-            >
-              <meta itemProp="position" content="1" />
-              <Link itemProp="item" href="/">
-                <span itemProp="name">Home</span>
-              </Link>
-            </div>
-            <div
-              itemProp="itemListElement"
-              itemScope
-              itemType="https://schema.org/ListItem"
-            >
-              <meta itemProp="position" content="2" />
-              <Link itemProp="item" href="/#work">
-                <span itemProp="name">My Work</span>
-              </Link>
-            </div>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </section>
   );
