@@ -1,15 +1,19 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-
 import {
   ExternalLink,
   Calendar,
   Smartphone,
   FileX,
-  Github,
+  Github as GithubIcon,
 } from "lucide-react";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useState, memo } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
 import {
   Card,
   CardContent,
@@ -18,97 +22,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState, memo } from "react";
+
 import { Button } from "@/components/ui/button";
-import { Project, ProjectCategory } from "@/types/types";
+import { Id } from "@/convex/_generated/dataModel";
+import { Project, ProjectCategory, ProjectDoc } from "@/types/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const projects: Project[] = [
-  {
-    id: "1",
-    title: "E-Commerce Dashboard",
-    image: "/linkup.png",
-    description:
-      "A comprehensive dashboard for managing e-commerce operations with analytics, inventory management, and order processing.",
-    datePublished: "2023-05-15",
-    technologies: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "Node.js",
-      "MongoDB",
-    ],
-    category: "fullstack",
-    githubUrl: "https://github.com/yourusername/ecommerce-dashboard",
-    demoUrl: "https://ecommerce-dashboard-demo.com",
-    featured: true,
-  },
-  {
-    id: "2",
-    title: "Social Media App",
-    image: "/linkup.png",
-    description:
-      "A feature-rich social media application with real-time messaging, post sharing, and user profiles.",
-    datePublished: "2023-03-10",
-    technologies: ["React", "Firebase", "Tailwind CSS", "JavaScript"],
-    category: "web",
-    githubUrl: "https://github.com/yourusername/social-media-app",
-    demoUrl: "https://social-media-app-demo.com",
-  },
-  {
-    id: "3",
-    title: "Task Management System",
-    image: "/linkup.png",
-    description:
-      "A comprehensive task management system with drag-and-drop functionality, task assignments, and progress tracking.",
-    datePublished: "2023-01-20",
-    technologies: ["React", "Redux", "Node.js", "Express", "MongoDB"],
-    category: "fullstack",
-    githubUrl: "https://github.com/yourusername/task-management",
-  },
-  {
-    id: "4",
-    title: "Weather App",
-    image: "/linkup.png",
-    description:
-      "A responsive weather application that provides real-time weather information for any location with a 5-day forecast.",
-    datePublished: "2022-11-05",
-    technologies: ["React", "JavaScript", "CSS", "Weather API"],
-    category: "web",
-    githubUrl: "https://github.com/yourusername/weather-app",
-    demoUrl: "https://weather-app-demo.com",
-  },
-  // Mobile app projects removed to show empty state
-  {
-    id: "6",
-    title: "Restaurant Ordering System",
-    image: "/linkup.png",
-    description:
-      "A full-stack application for restaurant ordering with menu management, order processing, and payment integration.",
-    datePublished: "2022-07-20",
-    technologies: ["React", "Node.js", "Express", "MongoDB", "Stripe"],
-    category: "fullstack",
-    githubUrl: "https://github.com/yourusername/restaurant-ordering",
-    demoUrl: "https://restaurant-ordering-demo.com",
-  },
-  // Another mobile app project removed to show empty state
-  {
-    id: "8",
-    title: "Portfolio Website",
-    image: "/linkup.png",
-    description:
-      "A responsive portfolio website showcasing projects, skills, and professional experience with a modern design.",
-    datePublished: "2022-03-15",
-    technologies: ["React", "Next.js", "Tailwind CSS", "TypeScript"],
-    category: "web",
-    githubUrl: "https://github.com/yourusername/portfolio",
-    demoUrl: "https://portfolio-demo.com",
-    featured: true,
-  },
-];
+type ProjectWithId = (Project | ProjectDoc) & {
+  _id?: Id<"projects">;
+  id?: string;
+};
 
-const ProjectCard = memo(({ project }: { project: Project }) => {
+import { ConvexImage } from "@/components/ui/convex-image";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const ProjectCard = memo(({ project }: { project: ProjectWithId }) => {
   const formattedDate = new Date(project.datePublished).toLocaleDateString(
     "en-US",
     {
@@ -118,6 +46,8 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
     }
   );
 
+  const isFeatured = "featured" in project ? project.featured : false;
+
   return (
     <Card
       className="overflow-hidden h-full flex flex-col pt-0"
@@ -125,19 +55,31 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
       itemType="https://schema.org/CreativeWork"
     >
       <div className="relative h-48 w-full overflow-hidden">
-        <Image
-          src={project.image}
-          alt={`${project.title} - Project by Youssef Mohammed`}
-          fill
-          className="object-cover transition-transform hover:scale-105 duration-300"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          quality={90}
-          priority={project.featured}
-          itemProp="image"
-        />
+        {project.image.includes("/") ? (
+          <Image
+            src={project.image}
+            alt={`${project.title} - Project by Youssef Mohammed`}
+            fill
+            className="object-cover transition-transform hover:scale-105 duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            quality={90}
+            priority={isFeatured}
+            itemProp="image"
+          />
+        ) : (
+          <ConvexImage
+            storageId={project.image}
+            alt={`${project.title} - Project by Youssef Mohammed`}
+            fill
+            className="object-cover transition-transform hover:scale-105 duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={isFeatured}
+            itemProp="image"
+          />
+        )}
       </div>
       <CardHeader>
-        <CardTitle className="text-xl truncate" itemProp="name">
+        <CardTitle className="text-xl line-clamp-1" itemProp="name">
           {project.title}
         </CardTitle>
         <div className="flex items-center text-sm text-muted-foreground gap-1">
@@ -186,7 +128,7 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
               rel="noopener noreferrer"
               itemProp="codeRepository"
             >
-              <Github />
+              <GithubIcon className="h-4 w-4 mr-1" />
               GitHub
             </Link>
           </Button>
@@ -199,7 +141,7 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
               rel="noopener noreferrer"
               itemProp="url"
             >
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink className="h-4 w-4 mr-1" />
               Live Demo
             </Link>
           </Button>
@@ -210,6 +152,36 @@ const ProjectCard = memo(({ project }: { project: Project }) => {
 });
 
 ProjectCard.displayName = "ProjectCard";
+
+const ProjectSkeleton = memo(() => {
+  return (
+    <Card className="overflow-hidden h-full flex flex-col pt-0">
+      <div className="relative h-48 w-full overflow-hidden">
+        <Skeleton className="h-full w-full" />
+      </div>
+      <CardHeader>
+        <Skeleton className="h-6 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-1/3 mb-2" />
+        <Skeleton className="h-4 w-1/4" />
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-5/6 mb-4" />
+        <div className="flex flex-wrap gap-2 mt-4">
+          <Skeleton className="h-6 w-16 rounded-full" />
+          <Skeleton className="h-6 w-20 rounded-full" />
+          <Skeleton className="h-6 w-14 rounded-full" />
+        </div>
+      </CardContent>
+      <CardFooter className="flex gap-2 pt-0">
+        <Skeleton className="h-9 w-full" />
+        <Skeleton className="h-9 w-full" />
+      </CardFooter>
+    </Card>
+  );
+});
+
+ProjectSkeleton.displayName = "ProjectSkeleton";
 
 const EmptyMobileAppsState = memo(() => {
   return (
@@ -233,13 +205,21 @@ EmptyMobileAppsState.displayName = "EmptyMobileAppsState";
 export const MyWork = () => {
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>("all");
 
-  const filteredProjects =
-    activeCategory === "all"
-      ? projects
-      : projects.filter((project) => project.category === activeCategory);
+  const allProjects = useQuery(api.projects.getProjects);
+
+  const categoryProjects = useQuery(
+    api.projects.getProjectsByCategory,
+    activeCategory !== "all" ? { category: activeCategory } : "skip"
+  );
+
+  const projects = activeCategory === "all" ? allProjects : categoryProjects;
+
+  const filteredProjects = projects || [];
 
   const showMobileEmptyState =
     activeCategory === "mobile" && filteredProjects.length === 0;
+
+  const isLoading = projects === undefined;
 
   return (
     <section id="work" className="py-20 w-full" aria-label="My Work">
@@ -267,23 +247,29 @@ export const MyWork = () => {
             </TabsList>
           </div>
           <TabsContent value={activeCategory} className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
-            {showMobileEmptyState ? (
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <ProjectSkeleton key={i} />
+                ))}
+              </div>
+            ) : filteredProjects.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProjects.map((project: ProjectWithId) => {
+                  const key = project._id || project.id;
+                  return <ProjectCard key={key} project={project} />;
+                })}
+              </div>
+            ) : showMobileEmptyState ? (
               <EmptyMobileAppsState />
             ) : (
-              filteredProjects.length === 0 && (
-                <div className="text-center max-w-lg mx-auto py-12">
-                  <FileX className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">
-                    No projects found in this category yet. Check back later for
-                    new additions to my portfolio!
-                  </p>
-                </div>
-              )
+              <div className="text-center max-w-lg mx-auto py-12">
+                <FileX className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">
+                  No projects found in this category yet. Check back later for
+                  new additions to my portfolio!
+                </p>
+              </div>
             )}
           </TabsContent>
         </Tabs>

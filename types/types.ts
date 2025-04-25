@@ -1,3 +1,5 @@
+import { Doc } from "@/convex/_generated/dataModel";
+
 export type NavItem = {
   label: string;
   href: string;
@@ -35,4 +37,15 @@ export type Project = {
   datePublished: string;
   technologies: string[];
   category: ProjectCategory;
+};
+
+export type ProjectDoc = Doc<"projects"> & {
+  title: string;
+  image: string;
+  category: string;
+  demoUrl?: string;
+  githubUrl?: string;
+  description: string;
+  datePublished: string;
+  technologies: string[];
 };
